@@ -3,15 +3,16 @@ import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, ScrollView, Dimensions } from 'react-native';
 
 import * as Location from 'expo-location';
+import { WEATHER_API_KEY } from '@env';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
 export default function App() {
   const [city, setCity] = useState('...Loading');
-  const [location, setLocation] = useState(null);
+  const [days, setDays] = useState([]);
   const [ok, setOk] = useState(true);
 
-  const ask = async () => {
+  const getWeather = async () => {
     const { granted } = await Location.requestForegroundPermissionsAsync();
     if (!granted) {
       setOk(false);
@@ -32,10 +33,16 @@ export default function App() {
     );
 
     setCity(location[0].city);
+    /* 날씨 API를 통한 Data 가져오기 */
+    const response = await fetch(
+      `https://api.openweathermap.org/data/2.5/forecast?lat=${latitude}&lon=${longitude}&appid=${WEATHER_API_KEY}`
+    );
+    const json = await response.json();
+    console.log(json);
   };
 
   useEffect(() => {
-    ask();
+    getWeather();
   }, []);
 
   return (
