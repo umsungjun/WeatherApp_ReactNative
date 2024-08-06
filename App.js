@@ -11,8 +11,19 @@ import {
 
 import * as Location from 'expo-location';
 import { WEATHER_API_KEY } from '@env';
+import Fontisto from '@expo/vector-icons/Fontisto';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
+
+const icons = {
+  Clear: 'day-sunny',
+  Clouds: 'cloudy',
+  Rain: 'rain',
+  Atmosphere: 'cloudy-gusts',
+  Snow: 'snow',
+  Drizzle: 'day-rain',
+  Thunderstorm: 'lightning',
+};
 
 export default function App() {
   const [city, setCity] = useState('...Loading');
@@ -67,7 +78,6 @@ export default function App() {
             <Text style={styles.cityName}>{city}</Text>
           </View>
           <ScrollView
-            contentContainerStyle={styles.weather}
             /* 수평 모드 */
             horizontal
             /* 페이지 쫀득하게 넘기기 */
@@ -87,7 +97,16 @@ export default function App() {
                   <Text style={styles.temp}>
                     {parseFloat(day.main.temp).toFixed(1)}
                   </Text>
-                  <Text style={styles.description}>{day.weather[0].main}</Text>
+                  <View style={styles.weather}>
+                    <Fontisto
+                      name={icons[day.weather[0].main]}
+                      size={50}
+                      color="black"
+                    />
+                    <Text style={styles.description}>
+                      {day.weather[0].main}
+                    </Text>
+                  </View>
                   <Text style={styles.date}>{day.dt_txt.split(' ')[0]}</Text>
                 </View>
               ))
@@ -109,11 +128,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   cityName: {
-    fontSize: 60,
+    fontSize: 70,
     fontWeight: 500,
     color: '#fff',
   },
-  weather: {},
   day: {
     width: SCREEN_WIDTH,
     alignItems: 'center',
@@ -121,8 +139,14 @@ const styles = StyleSheet.create({
   temp: {
     fontSize: 150,
   },
+  weather: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+  },
   description: { fontSize: 60 },
   date: {
+    marginTop: 5,
     fontSize: 30,
   },
 });
