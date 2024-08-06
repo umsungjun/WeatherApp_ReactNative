@@ -50,6 +50,7 @@ export default function App() {
     const filteredList = list.filter(({ dt_txt }) =>
       dt_txt.endsWith('00:00:00')
     );
+
     setDays(filteredList);
   };
 
@@ -60,36 +61,40 @@ export default function App() {
   return (
     <View style={styles.container}>
       <StatusBar style="light" />
-      <View style={styles.city}>
-        <Text style={styles.cityName}>{city}</Text>
-      </View>
-      <ScrollView
-        contentContainerStyle={styles.weather}
-        /* 수평 모드 */
-        horizontal
-        /* 페이지 쫀득하게 넘기기 */
-        pagingEnabled
-        /* 바닥 ScrollIndicator */
-        showsHorizontalScrollIndicator="false"
-        /* 바닥 ScrollIndicator Color 지정 Ios만 동작*/
-        // indicatorStyle="white"
-      >
-        {days.length === 0 ? (
-          <View style={styles.day}>
-            <ActivityIndicator color="white" size="large" />
+      {ok && (
+        <>
+          <View style={styles.city}>
+            <Text style={styles.cityName}>{city}</Text>
           </View>
-        ) : (
-          days.map((day, index) => (
-            <View key={index} style={styles.day}>
-              <Text style={styles.temp}>
-                {parseFloat(day.main.temp).toFixed(1)}
-              </Text>
-              <Text style={styles.description}>{day.weather[0].main}</Text>
-              <Text style={styles.tinyText}>{day.weather[0].description}</Text>
-            </View>
-          ))
-        )}
-      </ScrollView>
+          <ScrollView
+            contentContainerStyle={styles.weather}
+            /* 수평 모드 */
+            horizontal
+            /* 페이지 쫀득하게 넘기기 */
+            pagingEnabled
+            /* 바닥 ScrollIndicator */
+            showsHorizontalScrollIndicator="false"
+            /* 바닥 ScrollIndicator Color 지정 Ios만 동작*/
+            // indicatorStyle="white"
+          >
+            {days.length === 0 ? (
+              <View style={styles.day}>
+                <ActivityIndicator color="white" size="large" />
+              </View>
+            ) : (
+              days.map((day, index) => (
+                <View key={index} style={styles.day}>
+                  <Text style={styles.temp}>
+                    {parseFloat(day.main.temp).toFixed(1)}
+                  </Text>
+                  <Text style={styles.description}>{day.weather[0].main}</Text>
+                  <Text style={styles.date}>{day.dt_txt.split(' ')[0]}</Text>
+                </View>
+              ))
+            )}
+          </ScrollView>
+        </>
+      )}
     </View>
   );
 }
@@ -116,8 +121,8 @@ const styles = StyleSheet.create({
   temp: {
     fontSize: 150,
   },
-  description: { marginTop: -10, fontSize: 60 },
-  tinyText: {
-    fontSize: 20,
+  description: { fontSize: 60 },
+  date: {
+    fontSize: 30,
   },
 });
